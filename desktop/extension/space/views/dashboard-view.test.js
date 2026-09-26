@@ -40,17 +40,45 @@ function stubOkFetch() {
   globalThis.fetch = async () => ({ ok: true, status: 200, json: async () => ({}) });
 }
 
-test("a superseded dashboard render discards its result instead of overwriting a newer one", async () => {
+test("a render already superseded before it starts writes nothing at all", async () => {
+  // Codex review finding on oceanmail-desktop#1: checking `isCurrent()` only
+  // after `Promise.all` still let an already-stale call (e.g. one still
+  // awaiting `preferences.load()` in space.js while a newer call finished
+  // first) stomp a correct, already-rendered view with its own "Loading…"
+  // placeholder — which then never gets replaced, since that stale call's
+  // own post-`Promise.all` check correctly stops it from writing again.
   stubDom();
   stubOkFetch();
-  const container = { innerHTML: "" };
+  const container = { innerHTML: "already showing a completed, current render" };
 
   await mountDashboardView(container, () => false);
 
   assert.equal(
     container.innerHTML,
+    "already showing a completed, current render",
+    "a call that is stale before it even starts must not touch the DOM at all"
+  );
+});
+
+test("a render that becomes stale only after its Station reads resolve still shows its own loading state, never stale final content", async () => {
+  stubDom();
+  stubOkFetch();
+  const container = { innerHTML: "" };
+  let checks = 0;
+  // True on the entry check (so this call proceeds and writes its own
+  // loading placeholder), false on every check after — i.e. it is
+  // superseded while its Promise.all is in flight, exactly like the
+  // original (already-fixed) race this module's docs describe.
+  const isCurrent = () => checks++ === 0;
+
+  await mountDashboardView(container, isCurrent);
+
+  assert.equal(
+    container.innerHTML,
     LOADING_HTML,
-    "an already-superseded render must not replace whatever the current render left in place"
+    "this call legitimately owned the container when it wrote the placeholder; " +
+      "it must not then overwrite a newer call's real content, but its own " +
+      "placeholder write was not stale at the time it happened"
   );
 });
 

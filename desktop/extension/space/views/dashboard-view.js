@@ -8,15 +8,24 @@ import { buildDashboardModel } from "../models/dashboard-model.js";
 
 /**
  * @param {HTMLElement} container
- * @param {() => boolean} [isCurrent] - Checked after the async Station reads
- *   resolve, right before the final render write. Defaults to always-current
- *   for direct callers. A caller that can re-trigger this mount before a
- *   prior call's Station reads resolve (e.g. a toggle a user can click
- *   repeatedly) must pass a real check, so a slower, now-superseded call
- *   cannot overwrite what a faster, more recent call already rendered — see
+ * @param {() => boolean} [isCurrent] - Checked both before this call writes
+ *   anything and again after the async Station reads resolve, right before
+ *   the final render write. Defaults to always-current for direct callers.
+ *   A caller that can re-trigger this mount before a prior call's own
+ *   preceding async work (e.g. loading preferences) or Station reads
+ *   resolve (a toggle a user can click repeatedly) must pass a real check:
+ *   the entry check stops an already-superseded call from ever replacing an
+ *   up-to-date render with its own "Loading…" placeholder — a call stale
+ *   only *after* Promise.all still needs the second check, since it already
+ *   passed the entry check and wrote that placeholder itself — see
  *   space.js's `renderStationDashboardSection`.
  */
 export async function mountDashboardView(container, isCurrent = () => true) {
+  if (!isCurrent()) {
+    // Already superseded before doing anything: leave whatever the current
+    // render put in the container alone, including its own loading state.
+    return;
+  }
   container.innerHTML = `<h1>Dashboard</h1><p class="placeholder-copy">Loading Station state…</p>`;
 
   const [health, station, outboundQueue, observerStatus, storageSecurity] = await Promise.all([

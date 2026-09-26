@@ -19,11 +19,15 @@ import { formatBytes } from "../lib/freshness.js";
 /**
  * @param {HTMLElement} container
  * @param {() => boolean} [isCurrent] - See `mountDashboardView`'s parameter
- *   of the same name (dashboard-view.js): discards this call's result if a
- *   newer one has superseded it, instead of overwriting a more recent
- *   render with a slower, now-stale one.
+ *   of the same name (dashboard-view.js): checked both before this call
+ *   writes anything and again after the async Station reads resolve, so a
+ *   superseded call neither stomps an up-to-date render with its own
+ *   "Loading…" placeholder nor overwrites it with stale final content.
  */
 export async function mountWatchView(container, isCurrent = () => true) {
+  if (!isCurrent()) {
+    return;
+  }
   container.innerHTML = `<p class="placeholder-copy">Loading Watch view…</p>`;
 
   const [health, outboundQueue, history] = await Promise.all([

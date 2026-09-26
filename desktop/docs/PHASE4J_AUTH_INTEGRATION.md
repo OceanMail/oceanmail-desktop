@@ -37,18 +37,29 @@ exercises this adapter against a real, built Station binary over a real loopback
 HTTP connection — two synthetic users/accounts (`alice`, `admin`) with
 freshly-generated ephemeral tokens, covering allowed vs. denied account scope,
 an unknown token, an already-expired token, restart with identity preserved,
-fail-closed reprovision when the credential file is removed, the service
-becoming unavailable (Station stopped, a real closed loopback port), and no
-token ever appearing in the child process's logs or any file it wrote. Set
-`OCEANMAIL_STATION_BINARY` to a built Station binary and run that script with
-Node; set `OCEANMAIL_STATION_REPO` to a Station checkout as well so the run
-prints the exact Station commit tested alongside Desktop's own (`git rev-parse
-HEAD` in this repo) — a passing run is only reproducible evidence when both
-commits are known, not just "it passed." "Malformed responses" from Station are
-not separately exercised here: Station's real HTTP layer only speaks well-formed
-JSON, so client-side schema rejection is a STATIC/UNIT concern (above) rather
-than something a real, correctly-behaving Station process can be made to
-produce in this integration harness.
+laboratory auth left entirely unconfigured (env var absent — Station starts
+with zero credentials, still unauthorized), the configured credential file
+itself missing from disk (reprovision/misconfiguration — Station refuses to
+start at all; these are two different Station code paths and the harness
+exercises both separately rather than treating "unset" and "missing" as the
+same scenario), the service becoming unavailable (Station stopped, a real
+closed loopback port), and no token ever appearing in the child process's
+logs or any file it wrote. Set `OCEANMAIL_STATION_BINARY` to a built Station
+binary and run that script with Node; set `OCEANMAIL_STATION_REPO` to a
+Station checkout as well so the run prints the exact Station commit tested
+alongside Desktop's own (`git rev-parse HEAD` in this repo, flagged loudly if
+that checkout has uncommitted changes). Neither commit line is independently
+verified against what actually ran: Desktop's is read from the checkout the
+script itself lives in, and Station's is only what `OCEANMAIL_STATION_REPO`
+asserts — nothing here rebuilds the binary from that checkout to prove the
+pairing, though the script does refuse to proceed when the binary predates
+the asserted commit, since it cannot have been built from a commit that did
+not exist yet. A passing run is reproducible evidence only to that extent,
+not an independently-verified guarantee. "Malformed responses" from Station
+are not separately exercised here: Station's real HTTP layer only speaks
+well-formed JSON, so client-side schema rejection is a STATIC/UNIT concern
+(above) rather than something a real, correctly-behaving Station process can
+be made to produce in this integration harness.
 LIVE / PRODUCT: no Thunderbird GUI or production enrollment claim.
 
 Real Available integration remains blocked on accepted holder-authorized

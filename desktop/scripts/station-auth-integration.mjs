@@ -3,7 +3,7 @@
 import assert from "node:assert/strict";
 import { randomBytes } from "node:crypto";
 import { once } from "node:events";
-import { mkdtemp, writeFile, readFile, readdir, rm } from "node:fs/promises";
+import { mkdtemp, writeFile, readFile, readdir, rm, stat } from "node:fs/promises";
 import { createServer } from "node:net";
 import { tmpdir } from "node:os";
 import { join, resolve, dirname } from "node:path";
@@ -30,19 +30,64 @@ function commitOf(repoDir) {
     return null;
   }
 }
+function isDirty(repoDir) {
+  try {
+    return execFileSync("git", ["-C", repoDir, "status", "--porcelain"], { encoding: "utf8" }).trim().length > 0;
+  } catch {
+    return null;
+  }
+}
+function commitTimestamp(repoDir, sha) {
+  try {
+    return Number(
+      execFileSync("git", ["-C", repoDir, "show", "-s", "--format=%ct", sha], { encoding: "utf8" }).trim()
+    );
+  } catch {
+    return null;
+  }
+}
 const desktopRepoDir = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const desktopCommit = commitOf(desktopRepoDir);
+const desktopDirty = desktopCommit ? isDirty(desktopRepoDir) : null;
 const stationRepoDir = process.env.OCEANMAIL_STATION_REPO
   ? resolve(process.env.OCEANMAIL_STATION_REPO)
   : null;
 const stationCommit = stationRepoDir ? commitOf(stationRepoDir) : null;
-console.log(`Desktop commit under test: ${desktopCommit ?? "unknown (not a git checkout)"}`);
+
+// OCEANMAIL_STATION_BINARY and OCEANMAIL_STATION_REPO are independent inputs:
+// nothing here rebuilds the binary from that checkout, so this cannot prove
+// the running binary actually IS that commit, only that the caller asserts
+// the pairing (reflected honestly in the printed label below). The one
+// contradiction catchable without doing a real build: a binary cannot have
+// been built from a commit that did not exist yet.
+if (stationCommit) {
+  const binaryMtimeSec = (await stat(binary)).mtimeMs / 1000;
+  const committedAtSec = commitTimestamp(stationRepoDir, stationCommit);
+  if (committedAtSec !== null && binaryMtimeSec < committedAtSec) {
+    throw new Error(
+      `OCEANMAIL_STATION_BINARY (built ${new Date(binaryMtimeSec * 1000).toISOString()}) predates ` +
+        `OCEANMAIL_STATION_REPO's HEAD ${stationCommit} (committed ${new Date(committedAtSec * 1000).toISOString()}); ` +
+        "it cannot have been built from that commit — rebuild the binary or point OCEANMAIL_STATION_REPO at the right checkout"
+    );
+  }
+}
+console.log(
+  `Desktop commit under test: ${
+    desktopCommit
+      ? desktopCommit +
+        (desktopDirty
+          ? " [DIRTY WORKING TREE — HEAD does not reflect all code actually running; not reproducible evidence]"
+          : "")
+      : "unknown (not a git checkout)"
+  }`
+);
 console.log(
   `Station commit under test: ${
-    stationCommit ??
-    (stationRepoDir
-      ? "unknown (OCEANMAIL_STATION_REPO set but not a git checkout)"
-      : "unknown (set OCEANMAIL_STATION_REPO to pin it) — binary path: " + binary)
+    stationCommit
+      ? stationCommit + " (as asserted by OCEANMAIL_STATION_REPO; not independently verified against the binary)"
+      : stationRepoDir
+        ? "unknown (OCEANMAIL_STATION_REPO set but not a git checkout)"
+        : "unknown (set OCEANMAIL_STATION_REPO to pin it) — binary path: " + binary
   }`
 );
 
@@ -128,14 +173,29 @@ try {
   assert.equal(await start(), stationId);
   assert.deepEqual(await alice.context(), before);
   await stop();
+  // Laboratory auth left entirely unconfigured (env var absent). Station
+  // starts fine with zero credentials, so every request is unauthorized —
+  // a different scenario from the credential file actually being missing
+  // from disk, tested next.
   delete env.OCEANMAIL_LAB_AUTH_FILE;
   await start();
   await assert.rejects(alice.context(), { code: "unauthorized" });
   await stop();
-  // Station is now stopped and nothing else in this run restarts it: exactly
-  // the "unavailable service" case the client's own `connection_failed` code
-  // exists for, exercised here against a real closed loopback port rather
-  // than only asserted at the STATIC/UNIT level.
+  // The configured credential file itself missing from disk (reprovision /
+  // misconfiguration), not merely unset: Station's from_runtime_file treats
+  // these differently — an absent env var starts with zero credentials, but
+  // a configured path that does not exist is a hard config error and Station
+  // refuses to start at all. Delete the real file and keep the env var
+  // pointed at it to exercise that stricter path for real.
+  env.OCEANMAIL_LAB_AUTH_FILE = authFile;
+  await rm(authFile, { force: true });
+  await assert.rejects(start(), { message: "Station startup failed" });
+  await stop();
+  // Station is now stopped (it never successfully started in either of the
+  // two scenarios just above) and nothing else in this run restarts it:
+  // exactly the "unavailable service" case the client's own
+  // `connection_failed` code exists for, exercised here against a real
+  // closed loopback port rather than only asserted at the STATIC/UNIT level.
   await assert.rejects(alice.context(), { code: "connection_failed" });
   for (const token of [aliceToken, adminToken, expiredToken]) assert.equal(logs.includes(token), false);
   for (const name of await readdir(directory)) {

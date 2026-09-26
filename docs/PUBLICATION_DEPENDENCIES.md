@@ -35,5 +35,6 @@ package using a newer version's license. Clarify upstream terms before bundling
 that dependency in a redistributed product; merely listing its URL is not an
 OceanMail relicensing grant. Retain this item in the publication provenance review.
 
-First-party source/icon ownership confirmation, outbound license choice and
-Thunderbird distribution/branding obligations remain separate gates.
+The approved outbound source/documentation licenses are installed. New source
+and icon inputs still require provenance review; Thunderbird binary distribution
+and branding obligations remain separate release gates.

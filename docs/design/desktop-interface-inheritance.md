@@ -1,10 +1,10 @@
 # OceanMail Desktop Interface Inheritance
 
-Current translation authority: [Decision 0009](../decisions/0009-ordinary-mail-scheduling-and-importance.md) supersedes the historical Priority scheduler described below. [Mail model correction](../../desktop/docs/MAIL_MODEL_CORRECTION.md) supersedes historical Outbox presentation: there is no user-facing OceanMail Outbox. Available is account-scoped metadata before transfer under the [Station logical contract](https://github.com/OceanMail/oceanmail-station-archive/blob/9bed63fc56cbede78a03bcc7ca3f64123045ca3b/docs/AVAILABLE_MANIFEST_ACCOUNT_CONTRACT.md). Prototype descriptions are history, not permission to restore removed controls.
+Current translation authority: [Decision 0009](../decisions/0009-ordinary-mail-scheduling-and-importance.md) supersedes the historical Priority scheduler described below. [Mail model correction](../../desktop/docs/MAIL_MODEL_CORRECTION.md) supersedes historical Outbox presentation: there is no user-facing OceanMail Outbox. Available is account-scoped metadata before transfer under the [Station logical contract](https://github.com/OceanMail/oceanmail-station/blob/main/docs/AVAILABLE_MANIFEST_ACCOUNT_CONTRACT.md). Prototype descriptions are history, not permission to restore removed controls.
 
 - **Status:** Accepted 0.2 design guide
 - **Implementation authority:** Decisions 0005 and 0006 plus current 0.2 domain designs
-- **Historical UX source:** `OceanMail/oceanmail-0.1-prototype`
+- **Historical UX source:** the earlier 0.1 design
 
 ## Purpose
 

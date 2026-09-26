@@ -3,11 +3,11 @@
 This is an implementation-tracking note for OceanMail Desktop, not a product decision. It
 records which Station API capabilities the desktop client boundary
 (`extension/station/station-client.js`) needs but that `oceanmail-station` does not expose
-yet. Current baseline: Station main includes accepted Phase 4I, the merged Available/account-authorization foundation from PR #26, and the merged Debian trixie/Dovecot 2.4 writable-IMAP compatibility proof from PR #25 (`51869c31e8f80aa32d0abad1747c32ab07e0fd5d`). The linked foundation contract specifies required behavior, not capabilities already shipped.
+yet. Current baseline: Station main includes accepted Phase 4I, the merged Available/account-authorization foundation , and the merged Debian trixie/Dovecot 2.4 writable-IMAP compatibility proof from PR #25 (`51869c31e8f80aa32d0abad1747c32ab07e0fd5d`). The linked foundation contract specifies required behavior, not capabilities already shipped.
 
 ## Available logical contract and ownership
 
-The [Available manifest and account authorization boundary](https://github.com/OceanMail/oceanmail-station-archive/blob/7a132b6ea4967c600dc8c673718d00b09c3ad42b/docs/AVAILABLE_MANIFEST_ACCOUNT_CONTRACT.md) is the merged Station contract from PR #26. It defines logical operations/state only; endpoint URLs, authentication, wire encoding, concrete cryptography and synchronization/transport mapping remain separate design work. No Desktop production code changes in this foundation tranche.
+The [Available manifest and account authorization boundary](https://github.com/OceanMail/oceanmail-station/blob/main/docs/AVAILABLE_MANIFEST_ACCOUNT_CONTRACT.md) is the merged Station contract . It defines logical operations/state only; endpoint URLs, authentication, wire encoding, concrete cryptography and synchronization/transport mapping remain separate design work. No Desktop production code changes in this foundation tranche.
 
 Available is recipient-private metadata about content at another authoritative holder **before constrained-link payload transfer**. It is not an IMAP folder, already-downloaded mailbox content, outbound Postfix history, or client-side filtering. Client presents intent/approval. When a recipient Station exists, that Station authenticates principals, enforces account grants and durably owns recipient-visible availability, plans and local execution/progress. In accepted Station-less hosted/Lite direct-Internet operation, the hosted Server/service assumes the equivalent client-authentication, account-grant, durable-plan and hosted retrieval/synchronization responsibilities; Desktop must not invent a Station merely to fit one deployment model.
 
@@ -40,7 +40,7 @@ Phase 4I returned-receipt/Message-ID evidence is accepted on Station `main`; its
 
 ## What the Station exposes today (loopback-only, no authentication)
 
-Pending bounded integration: [Station PR #48](https://github.com/OceanMail/oceanmail-station-archive/pull/48)
+Pending bounded integration: Station
 adds protected laboratory auth-context endpoints only. Desktop has an explicit
 opt-in [Phase 4J adapter](PHASE4J_AUTH_INTEGRATION.md) for that contract, with
 runtime credentials and identity/account response validation. It is not normal

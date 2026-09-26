@@ -1,7 +1,7 @@
 # Phase 4J laboratory Station client integration
 
 This is an opt-in development adapter for the actual context endpoints in
-[Station PR #48](https://github.com/OceanMail/oceanmail-station-archive/pull/48), not a
+Station, not a
 production login mechanism. It is not enabled in the normal Thunderbird UI and
 does not replace Available fixtures, authorize account provisioning, or expose
 private Station evidence.

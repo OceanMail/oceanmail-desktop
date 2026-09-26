@@ -1,10 +1,9 @@
 # Contributing
 
 Source and documentation licenses are published in [LICENSING.md](LICENSING.md).
-Additional inbound contribution terms, including the proposed DCO, remain
-unadopted. External contribution acceptance remains paused until that policy
-is finalized. Do not infer a license restriction on reuse from this temporary
-contribution-process pause.
+Fork this public repository, create a topic branch and submit a pull request
+against `main`. Maintainers review and merge; upstream write access is unnecessary.
+No DCO or additional inbound agreement is adopted.
 
 For CI validation, use Node.js 22 and run `npm ci`, `npm run lint`, and `npm test`
 from the `desktop/` directory. Read [the documentation index](docs/README.md) for the

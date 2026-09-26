@@ -1,6 +1,6 @@
 # OceanMail Client User Experience
 
-[Decision 0009](../decisions/0009-ordinary-mail-scheduling-and-importance.md) governs transport class/Important metadata. Available follows the [Station logical contract](https://github.com/OceanMail/oceanmail-station-archive/blob/9bed63fc56cbede78a03bcc7ca3f64123045ca3b/docs/AVAILABLE_MANIFEST_ACCOUNT_CONTRACT.md): native holders can supply boat-to-boat pre-transfer metadata without the Server, holder-side disclosure must be recipient/account-authorized or equivalently confidential, and the active recipient-side plan owner enforces account privacy. The [Mail model correction](../../desktop/docs/MAIL_MODEL_CORRECTION.md) is authoritative for account-scoped Mail: there is no user-facing OceanMail Outbox.
+[Decision 0009](../decisions/0009-ordinary-mail-scheduling-and-importance.md) governs transport class/Important metadata. Available follows the [Station logical contract](https://github.com/OceanMail/oceanmail-station/blob/main/docs/AVAILABLE_MANIFEST_ACCOUNT_CONTRACT.md): native holders can supply boat-to-boat pre-transfer metadata without the Server, holder-side disclosure must be recipient/account-authorized or equivalently confidential, and the active recipient-side plan owner enforces account privacy. The [Mail model correction](../../desktop/docs/MAIL_MODEL_CORRECTION.md) is authoritative for account-scoped Mail: there is no user-facing OceanMail Outbox.
 
 - **Status:** Accepted 0.2 design direction
 - **Client implementation authority:** Decisions 0005 and 0006

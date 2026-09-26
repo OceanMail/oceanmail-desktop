@@ -2,7 +2,7 @@
 
 - **Status:** Accepted
 - **Date:** 2026-09-03
-- **Re-records:** the accepted 0.2 transition preserved in `oceanmail-0.1-prototype/docs/adr/0007-v0.2-hermes-transition.md`
+- **Re-records:** the accepted 0.2 transition preserved in the earlier 0.1 design
 
 ## Context
 

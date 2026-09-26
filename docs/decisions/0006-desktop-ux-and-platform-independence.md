@@ -1,6 +1,6 @@
 # Decision 0006 — Desktop UX inheritance and platform independence
 
-**Current policy supersession (2026-09-11):** [Decision 0009](0009-ordinary-mail-scheduling-and-importance.md) overrides all older ordinary Priority classes, premiums and inbound/outbound reprioritization language retained below as decision history. Only Emergency and Ordinary remain; Important is conventional metadata only. Recipient ordering is a preference within the local-account portion of Band 2 under [Project ADR-008](https://github.com/OceanMail/oceanmail-project/blob/main/docs/decisions/ADR-008-four-band-scheduling-and-channel-use.md), never guaranteed transport precedence. ADR-008's Bands 0–3 supersede Decision 0009's historical five-band hierarchy. The [Mail model correction](../../desktop/docs/MAIL_MODEL_CORRECTION.md) supersedes the historical user-facing Outbox presentation. Current account-scoped Available ownership/authorization follows the [merged Station logical contract](https://github.com/OceanMail/oceanmail-station-archive/blob/7a132b6ea4967c600dc8c673718d00b09c3ad42b/docs/AVAILABLE_MANIFEST_ACCOUNT_CONTRACT.md).
+**Current policy supersession (2026-09-11):** [Decision 0009](0009-ordinary-mail-scheduling-and-importance.md) overrides all older ordinary Priority classes, premiums and inbound/outbound reprioritization language retained below as decision history. Only Emergency and Ordinary remain; Important is conventional metadata only. Recipient ordering is a preference within the local-account portion of Band 2 under [Project ADR-008](https://github.com/OceanMail/oceanmail-project/blob/main/docs/decisions/ADR-008-four-band-scheduling-and-channel-use.md), never guaranteed transport precedence. ADR-008's Bands 0–3 supersede Decision 0009's historical five-band hierarchy. The [Mail model correction](../../desktop/docs/MAIL_MODEL_CORRECTION.md) supersedes the historical user-facing Outbox presentation. Current account-scoped Available ownership/authorization follows the [merged Station logical contract](https://github.com/OceanMail/oceanmail-station/blob/main/docs/AVAILABLE_MANIFEST_ACCOUNT_CONTRACT.md).
 
 - **Status:** Accepted
 - **Date:** 2026-09-06
@@ -24,13 +24,11 @@ Mobile is no longer part of the near-term client implementation plan. The Deskto
 
 OceanMail Desktop development must review and use the accepted 0.1 interface decisions and owner refinements as a design guide.
 
-The primary historical references are:
-
-- `OceanMail/oceanmail-0.1-prototype/docs/UI-DESIGN-DECISION-AUDIT-2026-08-31.md`;
-- `OceanMail/oceanmail-0.1-prototype/docs/USER-INTERFACE-DESIGN.md`;
-- `OceanMail/oceanmail-0.1-prototype/docs/OMAIL-TRANSFER-AND-RETRIEVAL-UX.md`;
-- `OceanMail/oceanmail-0.1-prototype/docs/adr/0005-owner-ui-refinement-boundaries.md`; and
-- the final interactive prototype itself when visual/layout details are not captured completely in prose.
+Accepted requirements are recorded in the public
+[Desktop interface inheritance](../design/desktop-interface-inheritance.md),
+[client UX](../design/client-user-experience.md), and
+[mail transfer/retrieval](../design/mail-transfer-and-retrieval.md) documents.
+Use these and subsequent decisions as the contributor-facing design references.
 
 Do not copy the old Rust/egui implementation architecture or revive BEMPIC/M4P assumptions. Current accepted 0.2 decisions and design documents always override conflicting 0.1 behavior.
 

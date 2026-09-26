@@ -1,6 +1,6 @@
 # Scheduling, Budgets, and Precedence
 
-Available authorization, revision protection and explicit unavailable/unknown accounting follow the [merged Station logical contract](https://github.com/OceanMail/oceanmail-station-archive/blob/7a132b6ea4967c600dc8c673718d00b09c3ad42b/docs/AVAILABLE_MANIFEST_ACCOUNT_CONTRACT.md). No balances are implemented by this document. Station may cache authoritative hosted policy and maintain local reservations/usage when a Station is present; the hosted service owns equivalent direct-Internet authority in Station-less hosted/Lite operation. Missing or stale accounting must not authorize spending beyond known permission. Native availability does not depend on central balances and does not imply unlimited transfer.
+Available authorization, revision protection and explicit unavailable/unknown accounting follow the [merged Station logical contract](https://github.com/OceanMail/oceanmail-station/blob/main/docs/AVAILABLE_MANIFEST_ACCOUNT_CONTRACT.md). No balances are implemented by this document. Station may cache authoritative hosted policy and maintain local reservations/usage when a Station is present; the hosted service owns equivalent direct-Internet authority in Station-less hosted/Lite operation. Missing or stale accounting must not authorize spending beyond known permission. Native availability does not depend on central balances and does not imply unlimited transfer.
 
 - **Status:** Accepted 0.2 design direction
 

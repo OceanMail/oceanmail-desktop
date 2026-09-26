@@ -115,16 +115,24 @@ async function mountStationPage(root) {
   await renderStationDashboardSection();
 }
 
+// Bumped on every call so a call superseded by a newer one (e.g. the user
+// clicking the Watch/Dashboard toggle again before the first click's Station
+// reads have resolved) can detect that and discard its now-stale result
+// instead of overwriting what the newer call already rendered.
+let dashboardSectionGeneration = 0;
+
 async function renderStationDashboardSection() {
   const container = document.getElementById("station-dashboard-section");
   if (!container) {
     return;
   }
+  const generation = ++dashboardSectionGeneration;
+  const isCurrent = () => generation === dashboardSectionGeneration;
   const prefs = await preferences.load();
   if (prefs.watchMode) {
-    await mountWatchView(container);
+    await mountWatchView(container, isCurrent);
   } else {
-    await mountDashboardView(container);
+    await mountDashboardView(container, isCurrent);
   }
 }
 

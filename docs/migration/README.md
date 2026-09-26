@@ -258,7 +258,7 @@ Detailed RF/rendezvous/modem-boundary requirements were moved to their owning co
 
 - `OceanMail/oceanmail-station/docs/research/RADIO_RENDEZVOUS_AND_LINK_REQUIREMENTS.md`
 
-The Station research retains channel-catalog, rendezvous/working-channel, half-duplex, connected-versus-broadcast, passive-listening, Hamlib/radio-control, measurement, propagation, and heading/antenna diagnostic requirements. Historical claims about specific modem versions/capabilities remain in the 0.1 archive and must be revalidated before implementation.
+The Station research retains channel-catalog, rendezvous/working-channel, half-duplex, connected-versus-broadcast, passive-listening, Hamlib/radio-control, measurement, propagation, and heading/antenna diagnostic requirements. Historical claims about modem versions/capabilities require fresh upstream verification before implementation.
 
 ## Wishlist review
 
@@ -284,7 +284,7 @@ The documentation-ownership rule is now being reflected in all active repositori
 
 ## Historical material
 
-0.1 work reports, prototype-specific ADRs, and implementation journals remain historical evidence in `OceanMail/oceanmail-0.1-prototype`.
+The migration summary is historical context. Current public design documents and decisions contain the requirements contributors should implement.
 
 They are not copied into active 0.2 docs. A later task may extract a specific finding only when it materially informs a current design or decision.
 

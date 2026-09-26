@@ -56,7 +56,7 @@ Connect and refine the real Thunderbird-based OceanMail Desktop against authenti
 - `OceanMail/oceanmail-server` — hosted service / Internet-mail application boundary
 - `OceanMail/oceanmail-infrastructure` — deployment and operations
 
-All five active components are approved for fresh sanitized public source repositories. Their original development repositories remain private under names ending in `-archive`. Server and Infrastructure are documentation bootstraps, not deployed production services.
+All five active components are public with installed licenses. Server and Infrastructure are bootstraps, not deployed production services.
 
 ## Source publication and licenses
 

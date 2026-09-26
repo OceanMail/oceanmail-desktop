@@ -27,7 +27,6 @@ The authority portion of Decision 0001 that made this repository the program-wid
 - `OceanMail/oceanmail-station` — Station service, HERMES/Mercury integration, Station APIs/state/evidence and Grid/control implementation.
 - `OceanMail/oceanmail-server` — hosted service and Internet-mail application boundary.
 - `OceanMail/oceanmail-infrastructure` — deployment/operations.
-- `OceanMail/bempic` and `OceanMail/bempic-reference` — frozen research, not active 0.2 dependencies.
 
 ## Normal Desktop reading order
 

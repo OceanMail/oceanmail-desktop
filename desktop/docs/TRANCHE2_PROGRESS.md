@@ -65,7 +65,7 @@ and kills your own script; use `pgrep`/`ps aux` for numeric PIDs + `kill -9`.
 
 ## Status: PR open, one review round done
 
-PR #5 (https://github.com/OceanMail/oceanmail-desktop-archive/pull/5) opened against
+PR #5 opened against
 `main`. Project lead reviewed and accepted the Tranche 2 architecture and
 implementation; one correction was requested (and made, this commit):
 `start-station-integration-lab.sh` now fetches `origin/main` and builds

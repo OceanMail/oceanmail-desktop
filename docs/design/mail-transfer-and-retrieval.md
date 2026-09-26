@@ -1,6 +1,6 @@
 # OMail Transfer and Retrieval
 
-Normative logical boundary: [merged Available manifest and account authorization contract](https://github.com/OceanMail/oceanmail-station-archive/blob/7a132b6ea4967c600dc8c673718d00b09c3ad42b/docs/AVAILABLE_MANIFEST_ACCOUNT_CONTRACT.md). [Decision 0009](../decisions/0009-ordinary-mail-scheduling-and-importance.md) governs Emergency/Ordinary scheduling and supersedes older Priority language. This is a logical contract, not a deployed API.
+Normative logical boundary: [merged Available manifest and account authorization contract](https://github.com/OceanMail/oceanmail-station/blob/main/docs/AVAILABLE_MANIFEST_ACCOUNT_CONTRACT.md). [Decision 0009](../decisions/0009-ordinary-mail-scheduling-and-importance.md) governs Emergency/Ordinary scheduling and supersedes older Priority language. This is a logical contract, not a deployed API.
 
 - **Status:** Accepted 0.2 design direction
 

@@ -11,8 +11,7 @@
 // yet).
 //
 // Design rules carried forward from docs/design/mail-transfer-and-retrieval.md
-// and the 0.1 ADR 0005 (oceanmail-0.1-prototype) that this reimplements on a
-// clean boundary:
+// and implemented here behind a testable client-side boundary:
 //   - Available is metadata/manifest only; no message body ever appears here.
 //   - Selecting a row is planning, not proof of retrieval/billing.
 //   - Selection/representation changes recompute aggregates immediately.

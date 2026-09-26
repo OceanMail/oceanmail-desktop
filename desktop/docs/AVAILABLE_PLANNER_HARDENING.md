@@ -1,6 +1,6 @@
 # Available fixture-planner hardening
 
-This is client planning behavior only. It does not implement Station issue #24,
+This is client planning behavior only. It does not implement Station Available API work,
 persist a plan, authorize a holder, reserve/debit credit, or retrieve content.
 All rows, budgets and approval state remain visibly development fixtures.
 

@@ -1,0 +1,4 @@
+.dev-profile/
+.vendor/
+web-ext-artifacts/
+node_modules/

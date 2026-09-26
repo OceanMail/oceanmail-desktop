@@ -1,0 +1,22 @@
+[
+  {
+    "namespace": "oceanmailMailFolders",
+    "description": "Narrowly-scoped bridge for account-scoped OceanMail Mail integration (Decision 0008, Decision 0009, docs/MAIL_MODEL_CORRECTION.md). Thunderbird's public MV3 mailTabs API exposes only built-in folder-pane modes and has no supported way to insert a custom child row beneath an account in the folder tree, so this experiment inserts an OceanMail Available pseudo-folder row and repositions the real Saved folder's row under each EXPLICITLY LISTED OceanMail account, and registers a native 'OceanMail Status' Sent-list column showing Station-derived delivery status only inside those accounts' real Sent folders. It never infers 'OceanMail' from generic IMAP-ness, never creates a real (fake) nsIMsgFolder, never mutates folder contents, and is limited to exactly this integration.",
+    "functions": [
+      {
+        "name": "syncFolders",
+        "type": "function",
+        "async": true,
+        "description": "Idempotently ensures every open Mail 3-pane document has an Available pseudo-folder row and correctly-positioned Saved row under each account whose id appears in oceanmailAccountIds, and that the native OceanMail Status Sent-list column is registered and scoped to exactly those accounts. Accounts not in oceanmailAccountIds are never touched. Safe to call repeatedly (e.g. on a timer, to withstand folder-tree rebuilds) and returns a short summary of what it did.",
+        "parameters": [
+          {
+            "name": "oceanmailAccountIds",
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Exact Thunderbird account keys (as returned by oceanmailAccounts.ensureAccount()'s accountId) to treat as OceanMail accounts. Any other account in the profile is left completely untouched."
+          }
+        ]
+      }
+    ]
+  }
+]

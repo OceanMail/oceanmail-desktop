@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>OceanMail</title>
+<link rel="stylesheet" href="space.css" />
+</head>
+<body>
+  <!--
+    Per project-lead correction (docs/decisions/0007-native-thunderbird-shell.md,
+    PR #7 review): Thunderbird's own native Spaces toolbar is the single
+    OceanMail primary navigation system. This page is no longer a full
+    application shell with its own rail — it renders exactly ONE OceanMail-
+    owned destination (Available / Outbox / Station+Dashboard / Emergency),
+    chosen by the `page` query parameter that each native Spaces-toolbar
+    button (background.js) points at. There is no in-page control here that
+    switches between Mail/Calendar/Contacts/Chat/Available/Outbox/etc — that
+    switching happens exclusively via the native Spaces toolbar one level up.
+    The header below carries only page-local status/density/theme controls,
+    never navigation.
+  -->
+  <div class="shell" id="shell">
+    <header class="page-topbar">
+      <h1 class="page-topbar-title" id="page-title">OceanMail</h1>
+
+      <button
+        class="status-pill"
+        id="status-pill"
+        type="button"
+        title="Open Station"
+      >
+        <span class="status-dot" id="status-dot-internet"></span>
+        <span id="status-label-internet">INTERNET</span>
+        <span class="status-sep">·</span>
+        <span class="status-dot" id="status-dot-station"></span>
+        <span id="status-label-station">STATION</span>
+        <span class="status-sep">·</span>
+        <span id="status-label-grid">GRID • unavailable</span>
+        <span class="status-sep">·</span>
+        <span id="status-label-queue">— observed</span>
+      </button>
+
+      <div class="topbar-spacer"></div>
+
+      <div class="topbar-actions">
+        <button id="watch-toggle" class="icon-button" type="button" aria-pressed="false" title="Watch / compact mode" aria-label="Toggle Watch mode" hidden>⏱</button>
+        <button id="theme-toggle" class="icon-button" type="button" aria-pressed="false" title="Toggle night mode" aria-label="Toggle night mode">🌙</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="content-inner" id="page-root"></div>
+    </main>
+  </div>
+
+  <script type="module" src="space.js"></script>
+</body>
+</html>

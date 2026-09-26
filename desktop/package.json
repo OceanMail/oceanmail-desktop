@@ -1,0 +1,16 @@
+{
+  "name": "oceanmail-desktop",
+  "private": true,
+  "version": "0.1.0",
+  "description": "OceanMail Desktop bootstrap: mandatory Thunderbird MailExtension and dev tooling.",
+  "type": "module",
+  "scripts": {
+    "lint": "node scripts/lint.mjs",
+    "test": "node --test",
+    "dev": "scripts/dev-launch.sh"
+  },
+  "devDependencies": {
+    "web-ext": "10.7.0"
+  },
+  "license": "AGPL-3.0-only"
+}

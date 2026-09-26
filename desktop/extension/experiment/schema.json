@@ -1,0 +1,35 @@
+[
+  {
+    "namespace": "oceanmailAccounts",
+    "description": "Minimal bridge to Thunderbird's native account-management backend, used only to provision the mandatory OceanMail IMAP/SMTP account. This is not a general-purpose account control API: it exposes exactly one operation.",
+    "functions": [
+      {
+        "name": "ensureAccount",
+        "type": "function",
+        "async": true,
+        "description": "Idempotently ensure a native Thunderbird IMAP account (with its SMTP identity) matching the given configuration exists, creating it via Thunderbird's own account-creation backend (the same code path the Account Hub wizard uses) if it does not. Safe to call on every startup.",
+        "parameters": [
+          {
+            "name": "config",
+            "type": "object",
+            "properties": {
+              "displayName": { "type": "string", "description": "Account display name shown in the folder pane." },
+              "realName": { "type": "string", "description": "Identity real name used on outgoing mail." },
+              "emailAddress": { "type": "string", "description": "Identity email address." },
+              "incomingHostname": { "type": "string" },
+              "incomingPort": { "type": "integer" },
+              "incomingUsername": { "type": "string" },
+              "incomingPassword": { "type": "string" },
+              "outgoingHostname": { "type": "string" },
+              "outgoingPort": { "type": "integer" },
+              "outgoingRequiresAuth": { "type": "boolean" },
+              "outgoingUsername": { "type": "string", "optional": true },
+              "outgoingPassword": { "type": "string", "optional": true },
+              "makeDefault": { "type": "boolean", "optional": true, "description": "Make this the default account if no other default with a usable server exists yet." }
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

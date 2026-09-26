@@ -1,0 +1,53 @@
+{
+  "manifest_version": 3,
+  "name": "OceanMail",
+  "version": "0.3.6",
+  "description": "OceanMail Desktop alpha: transforms Thunderbird's native shell into OceanMail — reliable cold-start initialization (Station, Emergency, Available, and Sent integration are present before any user interaction), native Mail with an account-scoped Available pseudo-folder (explicit accessible reorder controls), a real per-account Saved folder positioned after Available, native Sent augmented with a native OceanMail Status delivery column (truthful for real messages, hidden outside OceanMail accounts) and a view-mode-aware Sent-details banner, a compose-time Important toggle backed by native message-priority metadata, native Local Folders hidden from the folder pane, plus native Spaces-toolbar destinations for Station and Emergency — scoped only to explicitly provisioned OceanMail accounts, with the Station API integration boundary.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "oceanmail@oceanmail.dev",
+      "strict_min_version": "136.0"
+    }
+  },
+  "permissions": [
+    "spaces",
+    "compose",
+    "accountsRead",
+    "accountsFolders",
+    "storage"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1/*"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "type": "module",
+    "preferred_environment": ["document"]
+  },
+  "compose_action": {
+    "default_title": "Mark Important",
+    "default_icon": "icons/important-off.svg"
+  },
+  "experiment_apis": {
+    "oceanmailAccounts": {
+      "schema": "experiment/schema.json",
+      "parent": {
+        "scopes": ["addon_parent"],
+        "script": "experiment/implementation.js",
+        "paths": [["oceanmailAccounts"]]
+      }
+    },
+    "oceanmailMailFolders": {
+      "schema": "experiment/mail-folders-schema.json",
+      "parent": {
+        "scopes": ["addon_parent"],
+        "script": "experiment/mail-folders.js",
+        "paths": [["oceanmailMailFolders"]]
+      }
+    }
+  },
+  "icons": {
+    "16": "icons/oceanmail-16.svg",
+    "32": "icons/oceanmail-32.svg"
+  }
+}

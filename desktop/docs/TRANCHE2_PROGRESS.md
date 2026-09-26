@@ -1,6 +1,8 @@
 # Tranche 2 save-state
 
-Update this file in place (not append-heavy) as a checkpoint. Keep it short.
+Historical implementation checkpoint. This is not a current branch, review or
+runtime-status report. See [the current Mail model](MAIL_MODEL_CORRECTION.md)
+and [Station contract gaps](STATION_API_CONTRACT_GAPS.md) for subsequent work.
 
 Branch: feature/oceanmail-desktop-account-bootstrap, baseline a795cd0.
 Station repo (`/home/developer/Projects/oceanmail-station`) is read-only/moving
@@ -45,7 +47,7 @@ and kills your own script; use `pgrep`/`ps aux` for numeric PIDs + `kill -9`.
    wizard, survives restart without duplicating, native SMTP send + IMAP
    read, native reply + forward (correct quoting/threading), both Space
    buttons open real native tabs/windows. All via screenshots during
-   testing (not re-saved as files — see chat transcript if needed).
+   testing (not retained as reproducible screenshot artifacts).
 6. **Stage B GUI proof** (real Station lab, `oceanmail-station` commit
    `1d9bbf649d29214f5bd0fbeed761ca6b38e651f9`, resolved from a fresh
    `origin/main` fetch and built only from a temporary detached worktree —
@@ -54,7 +56,7 @@ and kills your own script; use `pgrep`/`ps aux` for numeric PIDs + `kill -9`.
    in it): same account, `scripts/start-station-integration-lab.sh`
    builds/runs Station's own unmodified Phase 1-3 lab images, applies the
    same runtime `docker exec` fixes as #1 (also present in Station's
-   images — tracked as `oceanmail-station` issue #21, not fixed there).
+   images at that time; corrected in the current Station snapshot).
    Native IMAP read, native SMTP send, native reply all confirmed. Full record in
    `docs/STATION_COMPATIBILITY_PROOF.md`.
 7. Isolation re-checked: vendored binary + `.dev-profile` only, no
@@ -63,9 +65,9 @@ and kills your own script; use `pgrep`/`ps aux` for numeric PIDs + `kill -9`.
    writes a per-build timestamp marker (no PII) to shared
    `~/.thunderbird/Crash Reports/` regardless of `-profile`.
 
-## Status: PR open, one review round done
+## Historical review checkpoint
 
-PR #5 opened against
+The Tranche 2 implementation was proposed against
 `main`. Project lead reviewed and accepted the Tranche 2 architecture and
 implementation; one correction was requested (and made, this commit):
 `start-station-integration-lab.sh` now fetches `origin/main` and builds
@@ -75,8 +77,8 @@ the shared checkout — never checks out a branch or touches a file there.
 Verified via a non-GUI raw SMTP/IMAP smoke test that lab behavior is
 unchanged (full GUI proof intentionally not re-run — project lead's
 instruction, since this was a build-mechanism fix, not a behavior change).
-Dovecot issues remain tracked as `oceanmail-station` issue #21 per project
-lead, not touched here.
+The Dovecot findings were outside this change; later Station compatibility
+work addresses them, as recorded in the current contract-gaps document.
 
 ## State of running things (as of last check)
 
@@ -85,6 +87,7 @@ worktree fix (`docker ps` shows nothing). The Thunderbird dev instance
 from the earlier session may still be running (`pgrep -x thunderbird`) —
 left as-is since it's harmless and the user can see it; not force-killed.
 
-## Next action
+## Subsequent status
 
-Awaiting further review on PR #5.
+This work is included in the initial public snapshot. Current development and
+review status belongs in the public pull requests.

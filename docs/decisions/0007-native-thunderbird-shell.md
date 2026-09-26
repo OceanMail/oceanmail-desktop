@@ -131,7 +131,7 @@ What must be replaced is the nested application-shell/navigation architecture an
 
 ## Consequences
 
-- PR #7 was required to remove the second OceanMail primary rail before acceptance; the merged alpha now uses native Thunderbird chrome.
+- The alpha correction was required to remove the second OceanMail primary rail before acceptance; the merged alpha now uses native Thunderbird chrome.
 - Future screenshots should show one coherent application chrome, not Thunderbird navigation plus an OceanMail web-app navigation rail.
 - Mail/Calendar/Contacts should increasingly look like native Thunderbird functionality rebranded and OceanMail-aware, not links out of a custom Space.
 - Generic Thunderbird Chat stays hidden until OChat is implemented as the OceanMail chat experience.

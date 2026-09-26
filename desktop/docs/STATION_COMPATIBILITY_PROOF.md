@@ -87,10 +87,9 @@ own lab — makes Dovecot open `INBOX` read-only (mbox dotlocking needs
 group-mail write access on `/var/mail`). Worked around here the same way,
 via `docker exec usermod -aG mail bob` on the running container.
 
-**Tracked as `oceanmail-station` issue #21, not fixed in that
-repository.** All three are latent incompatibilities with the Dovecot
-package version shipped by Debian trixie, not something specific to
-Desktop's usage.
+**Historical finding:** these Dovecot/trixie incompatibilities affected the
+Station revision tested here. The current Station snapshot includes the
+compatibility corrections; see the [current contract gaps](STATION_API_CONTRACT_GAPS.md).
 
 ## Reproducing
 

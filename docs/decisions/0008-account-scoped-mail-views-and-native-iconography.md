@@ -136,7 +136,7 @@ Account-scoped mail concepts such as Available should not occupy a global top-le
 
 ## Consequences
 
-- PR #7 removed the top-level `Available` Spaces button and established per-account native-Mail placement; the merged implementation and Mail model correction are the current baseline.
+- The alpha correction removed the top-level `Available` Spaces button and established per-account native-Mail placement; the merged implementation and Mail model correction are the current baseline.
 - The Available planner model/tests remain useful, but their data model must remain account-scoped and must not substitute client filtering for backend authorization.
 - OceanMail Spaces icons use a Thunderbird-compatible monochrome/theme-aware icon family.
 - UI reviews should test at least two OceanMail accounts simultaneously to catch accidental global state, shared budget, or wrong-account retrieval behavior.

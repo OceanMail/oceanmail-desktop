@@ -1,6 +1,6 @@
-# PR #7 final verification workstation product verification
+# Alpha verification workstation product verification
 
-Final live verification performed on local verification workstation (Debian/KDE) on 2026-09-10 against the pinned Thunderbird 140.14.0esr build and the real two-account SMTP/IMAP development lab.
+Historical live verification performed on local verification workstation (Debian/KDE) on 2026-09-10 against the pinned Thunderbird 140.14.0esr build and the real two-account SMTP/IMAP development lab.
 
 Verified implementation HEAD before documentation-only cleanup:
 
@@ -49,7 +49,7 @@ The Cards/Table compromise is accepted for this alpha: Thunderbird Cards View ca
 
 ## INTEGRATION / CI — PASS
 
-GitHub Actions workflow `OceanMail Desktop` run #51 passed for exact implementation HEAD `0812a99a0a7d1cb52647a7b865c9f4e78583840d` on the OceanMail organization self-hosted Linux runner.
+Historical CI passed for implementation HEAD `0812a99a0a7d1cb52647a7b865c9f4e78583840d`. This record does not establish results for current public commits; consult their public Actions runs.
 
 ## Screenshot policy
 

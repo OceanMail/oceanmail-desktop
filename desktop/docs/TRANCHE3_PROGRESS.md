@@ -17,7 +17,7 @@
 
 Branch: `feature/oceanmail-desktop-alpha-experience`, created fresh from
 `origin/main` at `8135b7710e0147a93a65906667b9027a064339c0` (not built on top
-of the Tranche 2 branch, per instruction). Tranche 2 (PR #5) is the baseline
+of the Tranche 2 branch, per instruction). Tranche 2 is the baseline
 this branches from and is not re-touched here except as read-only reference.
 
 Station repo (`oceanmail-station`) remains read-only/authoritative and was

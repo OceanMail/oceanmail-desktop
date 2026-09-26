@@ -8,7 +8,7 @@
 > semantics, use `../../docs/decisions/0007-native-thunderbird-shell.md` and
 > the current documents under `../../docs/`.
 
-Working notes for the native-Thunderbird-shell pivot (PR #7 correction).
+Working notes for the native-Thunderbird-shell pivot (alpha correction).
 Recording decisions as they were made, not at the end.
 
 ## Decisions made (reversible, proceeding without asking)
@@ -46,7 +46,7 @@ Recording decisions as they were made, not at the end.
 
 ## Status: correction implemented, pushed, CI green
 
-All work pushed to `feature/oceanmail-desktop-alpha-experience` (PR #7):
+Historical alpha correction commits:
 commits `f65c26c` (shell pivot + 4 truthfulness corrections),
 `db865bd` (new screenshot set + a watch-view.js wording fix caught while
 capturing them). CI (`lint`, `test` × ubuntu/windows/macos) green on both.
@@ -95,30 +95,24 @@ This is a real, currently-open defect (native Mail/Chat tooltips are not
 actually relabeled), not merely an unverified cosmetic nicety as previously
 stated — correcting that impression from the earlier note in this file.
 
-## PR #8 dependency (found while working, not asked about)
+## Native-shell decision dependency
 
-The review cited `docs/decisions/0007-native-thunderbird-shell.md` as the
-decision reference. That file does not exist on `main` or this branch — it
-lives on the still-open `OceanMail/oceanmail-desktop#8` (branch
-`docs/native-thunderbird-shell`). This PR's code comments (background.js,
-space.js, space.css) cite that path as a forward reference; it will 404 for
-anyone reading this branch until #8 merges. Not fixing this myself (it's
-project lead's own decision doc, not mine to edit) — flagging so #7 and #8
-land in an order/way that doesn't leave a dangling doc reference, e.g. merge
-#8 first, or merge together.
+The native-shell decision was a separate dependency during this correction.
+It is now available in the public tree as
+[the native Thunderbird shell decision](../../docs/decisions/0007-native-thunderbird-shell.md).
 
-Read #8's full doc text: its scope is considerably larger than what this
+The decision's scope is considerably larger than what this
 correction implements — it envisions OceanMail branding across ALL native
 chrome (Calendar/Contacts eventually reworked, not just left native;
 priority/budget controls inside compose/read/list; a truly persistent
-status bar IN native chrome, not just on OceanMail's own pages). #8's own
+status bar IN native chrome, not just on OceanMail's own pages). The decision's own
 "Consequences" section frames the hard, immediate blocker narrowly ("the
 second OceanMail primary rail is not accepted") and frames the deeper chrome
 integration as future/"to be prototyped against supported APIs first" —
 matching my read of the review comment itself. This correction satisfies the
 hard blocker and the 4 explicit reusable-work/truthfulness items; it
-deliberately does not attempt #8's fuller aspirational scope (see escalation
-notes below, written before I'd read #8's text and still accurate after).
+deliberately does not attempt the decision's fuller aspirational scope (see escalation
+notes below, written before I'd read the decision text and still accurate after).
 
 ## Escalation candidates for ChatGPT/project-lead (not blocking; noted for later)
 
@@ -139,14 +133,8 @@ notes below, written before I'd read #8's text and still accurate after).
   on OceanMail's own 4 pages. Flagging as a real product question (how much
   chrome injection is acceptable) rather than deciding it unilaterally.
 
-## GITHUB_ACTIONS_BILLING — needs the account owner, not code
+## Historical CI interruption
 
-As of the `34e7db1` push, all CI jobs (lint + test x3) fail immediately with:
-"The job was not started because recent account payments have failed or
-your spending limit needs to be increased." This is a GitHub Actions
-billing/spending-limit issue on the maintainer account, unrelated to any
-code in this PR — the prior push (`c6c8888`) still shows all green. Nothing
-in this repo can fix this; it needs the account owner to update payment
-info or spending limits in GitHub billing settings. Flagging immediately
-rather than at handoff time, per instruction, since CI will keep failing on
-every subsequent push here until that's resolved.
+The `34e7db1` push encountered an infrastructure-level CI startup failure;
+the prior `c6c8888` run passed. A job that never starts provides no test result.
+This historical interruption does not describe current public CI status.

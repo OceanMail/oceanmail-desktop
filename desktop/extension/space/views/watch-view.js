@@ -16,7 +16,18 @@ import { buildRealSentStatusRows } from "../models/sent-status-model.js";
 import { getAllFixtureAvailableRows } from "../fixtures/available-fixtures.js";
 import { formatBytes } from "../lib/freshness.js";
 
-export async function mountWatchView(container) {
+/**
+ * @param {HTMLElement} container
+ * @param {() => boolean} [isCurrent] - See `mountDashboardView`'s parameter
+ *   of the same name (dashboard-view.js): checked both before this call
+ *   writes anything and again after the async Station reads resolve, so a
+ *   superseded call neither stomps an up-to-date render with its own
+ *   "Loading…" placeholder nor overwrites it with stale final content.
+ */
+export async function mountWatchView(container, isCurrent = () => true) {
+  if (!isCurrent()) {
+    return;
+  }
   container.innerHTML = `<p class="placeholder-copy">Loading Watch view…</p>`;
 
   const [health, outboundQueue, history] = await Promise.all([
@@ -24,6 +35,10 @@ export async function mountWatchView(container) {
     Implemented.outboundQueue().catch(() => null),
     Implemented.outboundQueueHistory().catch(() => null)
   ]);
+
+  if (!isCurrent()) {
+    return;
+  }
 
   const dashboard = buildDashboardModel({
     health,

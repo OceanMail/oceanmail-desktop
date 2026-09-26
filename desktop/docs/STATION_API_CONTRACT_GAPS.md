@@ -3,7 +3,7 @@
 This is an implementation-tracking note for OceanMail Desktop, not a product decision. It
 records which Station API capabilities the desktop client boundary
 (`extension/station/station-client.js`) needs but that `oceanmail-station` does not expose
-yet. Current baseline: Station main includes accepted Phase 4I, the merged Available/account-authorization foundation , and the merged Debian trixie/Dovecot 2.4 writable-IMAP compatibility proof from PR #25 (`51869c31e8f80aa32d0abad1747c32ab07e0fd5d`). The linked foundation contract specifies required behavior, not capabilities already shipped.
+yet. Current baseline: Station main includes accepted Phase 4I, the merged Available/account-authorization foundation, and the merged Debian trixie/Dovecot 2.4 writable-IMAP compatibility proof recorded in the Station documentation. The linked foundation contract specifies required behavior, not capabilities already shipped.
 
 ## Available logical contract and ownership
 
@@ -36,7 +36,7 @@ All Available rows, representation sizes/times and budget inputs remain fixtures
 
 ### Station evidence dependencies
 
-Phase 4I returned-receipt/Message-ID evidence is accepted on Station `main`; its `lab_peer_transport_unverified` receipt trust does not supply account authorization, holder identity, or remote manifest confidentiality. Station PR #25 is also merged and proves the post-transfer Debian trixie/Dovecot 2.4 authenticated writable-IMAP path, including a non-mutating `BODY.PEEK[]` retrieval followed by an explicit `\Seen` state transition. That post-transfer mailbox proof is not pre-transfer Available and does not satisfy the Available authorization model. A nondeterministic Phase 4I attempt-snapshot readiness race observed during final PR #25 reconciliation was corrected by merged Station PR #47, closing issue #42 after current-base Phase 4I run `35559385475` passed. The correction preserves the accepted evidence semantics.
+Phase 4I returned-receipt/Message-ID evidence is accepted on Station `main`; its `lab_peer_transport_unverified` receipt trust does not supply account authorization, holder identity, or remote manifest confidentiality. The merged Station compatibility work proves the post-transfer Debian trixie/Dovecot 2.4 authenticated writable-IMAP path, including a non-mutating `BODY.PEEK[]` retrieval followed by an explicit `\Seen` state transition. That post-transfer mailbox proof is not pre-transfer Available and does not satisfy the Available authorization model. A nondeterministic Phase 4I attempt-snapshot readiness race observed during compatibility reconciliation was corrected by bounded readiness-gate hardening and validated by a subsequent Phase 4I run. The correction preserves the accepted evidence semantics.
 
 ## What the Station exposes today (loopback-only, no authentication)
 

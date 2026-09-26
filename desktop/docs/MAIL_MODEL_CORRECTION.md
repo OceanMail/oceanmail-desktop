@@ -1,6 +1,6 @@
 # Mail-model correction — account-scoped Mail, no user-facing Outbox
 
-Second correction pass on PR #7, on top of the native-Thunderbird-shell
+Second alpha correction pass, on top of the native-Thunderbird-shell
 pivot recorded in `TRANCHE3_CORRECTION_NOTES.md`. This is the current,
 authoritative description of the Mail information architecture; keep it
 updated in place rather than appending a third parallel notes file.

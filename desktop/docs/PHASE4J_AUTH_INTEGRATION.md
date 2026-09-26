@@ -33,9 +33,22 @@ the legacy lab evidence API is not protected by this new context-only slice.
 STATIC / UNIT: Node tests exercise request restrictions, identity/scoping,
 redacted errors, schema rejection, immutable results and no stale auth fallback.
 INTEGRATION: the opt-in process harness in `scripts/station-auth-integration.mjs`
-can exercise this adapter against a built Station PR #48 binary; it uses only
-generated synthetic identities and ephemeral credentials. Set
-`OCEANMAIL_STATION_BINARY` to the binary path and run that script with Node.
+exercises this adapter against a real, built Station binary over a real loopback
+HTTP connection — two synthetic users/accounts (`alice`, `admin`) with
+freshly-generated ephemeral tokens, covering allowed vs. denied account scope,
+an unknown token, an already-expired token, restart with identity preserved,
+fail-closed reprovision when the credential file is removed, the service
+becoming unavailable (Station stopped, a real closed loopback port), and no
+token ever appearing in the child process's logs or any file it wrote. Set
+`OCEANMAIL_STATION_BINARY` to a built Station binary and run that script with
+Node; set `OCEANMAIL_STATION_REPO` to a Station checkout as well so the run
+prints the exact Station commit tested alongside Desktop's own (`git rev-parse
+HEAD` in this repo) — a passing run is only reproducible evidence when both
+commits are known, not just "it passed." "Malformed responses" from Station are
+not separately exercised here: Station's real HTTP layer only speaks well-formed
+JSON, so client-side schema rejection is a STATIC/UNIT concern (above) rather
+than something a real, correctly-behaving Station process can be made to
+produce in this integration harness.
 LIVE / PRODUCT: no Thunderbird GUI or production enrollment claim.
 
 Real Available integration remains blocked on accepted holder-authorized

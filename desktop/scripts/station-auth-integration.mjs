@@ -6,18 +6,50 @@ import { once } from "node:events";
 import { mkdtemp, writeFile, readFile, readdir, rm } from "node:fs/promises";
 import { createServer } from "node:net";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
-import { spawn } from "node:child_process";
+import { join, resolve, dirname } from "node:path";
+import { spawn, execFileSync } from "node:child_process";
 import { setTimeout as delay } from "node:timers/promises";
+import { fileURLToPath } from "node:url";
 import { createLabAuthClient } from "../extension/station/station-client.js";
 
 if (!process.env.OCEANMAIL_STATION_BINARY) {
   throw new Error("Set OCEANMAIL_STATION_BINARY to the built Phase 4J Station binary");
 }
 const binary = resolve(process.env.OCEANMAIL_STATION_BINARY);
+
+// Pin exact tested commits in the printed result, not just "it passed" — a
+// green run against an unknown Desktop/Station pair is not reproducible
+// evidence. OCEANMAIL_STATION_REPO (same variable
+// start-station-integration-lab.sh uses) is optional here since this
+// script only needs a built binary, not a checkout; when unset, that is
+// reported explicitly rather than guessed.
+function commitOf(repoDir) {
+  try {
+    return execFileSync("git", ["-C", repoDir, "rev-parse", "HEAD"], { encoding: "utf8" }).trim();
+  } catch {
+    return null;
+  }
+}
+const desktopRepoDir = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
+const desktopCommit = commitOf(desktopRepoDir);
+const stationRepoDir = process.env.OCEANMAIL_STATION_REPO
+  ? resolve(process.env.OCEANMAIL_STATION_REPO)
+  : null;
+const stationCommit = stationRepoDir ? commitOf(stationRepoDir) : null;
+console.log(`Desktop commit under test: ${desktopCommit ?? "unknown (not a git checkout)"}`);
+console.log(
+  `Station commit under test: ${
+    stationCommit ??
+    (stationRepoDir
+      ? "unknown (OCEANMAIL_STATION_REPO set but not a git checkout)"
+      : "unknown (set OCEANMAIL_STATION_REPO to pin it) — binary path: " + binary)
+  }`
+);
+
 const directory = await mkdtemp(join(tmpdir(), "oceanmail-client-auth-"));
 const aliceToken = randomBytes(32).toString("hex");
 const adminToken = randomBytes(32).toString("hex");
+const expiredToken = randomBytes(32).toString("hex");
 let child;
 let exited;
 let logs = "";
@@ -39,7 +71,11 @@ try {
       account_grants: [{ account_id: "account-alice", permissions: ["context_read", "available_read"] }],
       expires_at_unix: expires },
     { token: adminToken, user_id: "user-admin", role: "admin", permissions: ["auth_context_read", "station_admin"],
-      device_id: "device-admin", device_trusted: true, account_grants: [], expires_at_unix: expires }
+      device_id: "device-admin", device_trusted: true, account_grants: [], expires_at_unix: expires },
+    { token: expiredToken, user_id: "user-alice", role: "user", permissions: ["auth_context_read"],
+      device_id: "device-alice", device_trusted: false,
+      account_grants: [{ account_id: "account-alice", permissions: ["context_read"] }],
+      expires_at_unix: Math.floor(Date.now() / 1000) - 60 }
   ] }), { mode: 0o600 });
   const postqueue = join(directory, "postqueue");
   await writeFile(postqueue, "#!/bin/sh\nexit 0\n", { mode: 0o700 });
@@ -85,6 +121,9 @@ try {
   const wrong = createLabAuthClient({ laboratoryOnly: true, baseUrl, token: randomBytes(32).toString("hex"),
     stationId, userId: "user-alice", deviceId: "device-alice" });
   await assert.rejects(wrong.context(), { code: "unauthorized" });
+  const expired = createLabAuthClient({ laboratoryOnly: true, baseUrl, token: expiredToken,
+    stationId, userId: "user-alice", deviceId: "device-alice" });
+  await assert.rejects(expired.context(), { code: "unauthorized" });
   await stop();
   assert.equal(await start(), stationId);
   assert.deepEqual(await alice.context(), before);
@@ -93,13 +132,23 @@ try {
   await start();
   await assert.rejects(alice.context(), { code: "unauthorized" });
   await stop();
-  for (const token of [aliceToken, adminToken]) assert.equal(logs.includes(token), false);
+  // Station is now stopped and nothing else in this run restarts it: exactly
+  // the "unavailable service" case the client's own `connection_failed` code
+  // exists for, exercised here against a real closed loopback port rather
+  // than only asserted at the STATIC/UNIT level.
+  await assert.rejects(alice.context(), { code: "connection_failed" });
+  for (const token of [aliceToken, adminToken, expiredToken]) assert.equal(logs.includes(token), false);
   for (const name of await readdir(directory)) {
     if (name === "auth.json") continue;
     const content = await readFile(join(directory, name));
-    for (const token of [aliceToken, adminToken]) assert.equal(content.includes(Buffer.from(token)), false);
+    for (const token of [aliceToken, adminToken, expiredToken]) {
+      assert.equal(content.includes(Buffer.from(token)), false);
+    }
   }
-  console.log("PASS: actual Desktop adapter / Station HTTP contract, account isolation, bounded admin, restart, fail-closed reprovision and secret checks");
+  console.log(
+    "PASS: actual Desktop adapter / Station HTTP contract, account isolation, bounded admin, " +
+      "expiry, unavailable service, restart, fail-closed reprovision and secret checks"
+  );
 } finally {
   await stop();
   await rm(directory, { recursive: true, force: true });

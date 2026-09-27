@@ -18,8 +18,24 @@ const DEFAULT_BASE_URL = "http://127.0.0.1:8080";
 // credential mechanism into normal account provisioning or Available fixtures.
 export { createLabAuthClient } from "./lab-auth-client.js";
 
+// Bounded like lab-auth-client.js's read(): a Station that accepts the TCP
+// connection but never responds must not hang Dashboard/Watch/Station-page
+// callers indefinitely with no way to distinguish "stuck" from "slow".
+const STATION_REQUEST_TIMEOUT_MS = 5000;
+
 async function getJson(baseUrl, path) {
-  const response = await fetch(`${baseUrl}${path}`, { method: "GET" });
+  let response;
+  try {
+    response = await fetch(`${baseUrl}${path}`, {
+      method: "GET",
+      signal: AbortSignal.timeout(STATION_REQUEST_TIMEOUT_MS)
+    });
+  } catch (err) {
+    if (err && err.name === "TimeoutError") {
+      throw new Error(`Station API ${path} did not respond within ${STATION_REQUEST_TIMEOUT_MS}ms`);
+    }
+    throw err;
+  }
   if (!response.ok) {
     throw new Error(`Station API ${path} returned HTTP ${response.status}`);
   }

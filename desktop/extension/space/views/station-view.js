@@ -34,16 +34,32 @@ export function mountStationView(container) {
   const resultEl = container.querySelector("#station-result");
   const baseUrlInput = container.querySelector("#station-base-url");
 
+  // Generation counter guards against the same stale-render race PR #1 fixed
+  // in dashboard-view.js/watch-view.js: a slow first click's response must
+  // never overwrite a faster, newer click's result once the user has
+  // re-checked (e.g. after editing the base URL and clicking again before
+  // the first request resolves).
+  let requestGeneration = 0;
+
   checkBtn.addEventListener("click", async () => {
     const baseUrl = baseUrlInput.value.trim().replace(/\/$/, "");
+    const generation = ++requestGeneration;
     resultEl.textContent = "Checking...";
     try {
       const [health, station] = await Promise.all([
         Implemented.health(baseUrl),
         Implemented.station(baseUrl)
       ]);
+      if (generation !== requestGeneration) {
+        // A newer click has already started or finished; applying this
+        // now-stale response would overwrite it.
+        return;
+      }
       resultEl.textContent = JSON.stringify({ health, station }, null, 2);
     } catch (err) {
+      if (generation !== requestGeneration) {
+        return;
+      }
       resultEl.textContent = `Failed: ${err.message}\n\nIs oceanmail-station running and bound to loopback at this address?`;
     }
   });

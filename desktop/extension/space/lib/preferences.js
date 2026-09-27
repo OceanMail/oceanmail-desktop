@@ -48,10 +48,25 @@ export function createPreferencesStore(storageArea) {
     return mergeWithDefaults(stored);
   }
 
-  async function set(partial) {
-    const current = await load();
-    const next = mergeWithDefaults({ ...current, ...partial });
-    await storageArea.set(next);
+  // Serializes writes so two overlapping set() calls (e.g. a user toggling
+  // theme and watch mode in quick succession, or two OceanMail windows open
+  // at once) each apply their partial update against the true latest state
+  // rather than a load() snapshot taken before an earlier in-flight set()
+  // landed — an unsynchronized read-modify-write would let the second
+  // writer silently drop the first writer's change.
+  let writeQueue = Promise.resolve();
+
+  function set(partial) {
+    const next = writeQueue.then(async () => {
+      const current = await load();
+      const merged = mergeWithDefaults({ ...current, ...partial });
+      await storageArea.set(merged);
+      return merged;
+    });
+    // Keep the chain alive even if this write rejects, so a later queued
+    // write still runs against the store's actual current state rather
+    // than being permanently blocked behind a failed one.
+    writeQueue = next.catch(() => {});
     return next;
   }
 

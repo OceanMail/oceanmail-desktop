@@ -48,19 +48,35 @@ export function createPreferencesStore(storageArea) {
     return mergeWithDefaults(stored);
   }
 
-  // Serializes writes so two overlapping set() calls (e.g. a user toggling
-  // theme and watch mode in quick succession, or two OceanMail windows open
-  // at once) each apply their partial update against the true latest state
-  // rather than a load() snapshot taken before an earlier in-flight set()
-  // landed — an unsynchronized read-modify-write would let the second
-  // writer silently drop the first writer's change.
+  // Serializes writes within this store instance so two overlapping set()
+  // calls from the same page (e.g. a user toggling theme and watch mode in
+  // quick succession) each apply their partial update against the true
+  // latest state rather than a load() snapshot taken before an earlier
+  // in-flight set() landed.
+  //
+  // This queue is local to one module instance, so it does nothing for two
+  // separate OceanMail windows, which each get their own store and queue.
+  // That cross-window case is instead handled by writing only the keys
+  // named in `partial` back to storageArea rather than the whole merged
+  // object: browser.storage.local.set() already merges by top-level key,
+  // so a window writing `theme` never touches a `watchMode` value a second
+  // window wrote concurrently, regardless of which stale copy of the other
+  // key this window's load() happened to read. Two windows changing the
+  // *same* key at the same time still resolve last-write-wins, same as any
+  // single write to that key would.
   let writeQueue = Promise.resolve();
 
   function set(partial) {
     const next = writeQueue.then(async () => {
       const current = await load();
       const merged = mergeWithDefaults({ ...current, ...partial });
-      await storageArea.set(merged);
+      const toWrite = {};
+      for (const key of Object.keys(partial)) {
+        if (key in merged) {
+          toWrite[key] = merged[key];
+        }
+      }
+      await storageArea.set(toWrite);
       return merged;
     });
     // Keep the chain alive even if this write rejects, so a later queued

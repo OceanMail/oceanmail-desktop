@@ -127,7 +127,9 @@ export function mountAvailableView(container, account) {
 
   function buildRow(row) {
     const tr = document.createElement("tr");
-    tr.className = row.effectiveBlockedReason ? "is-blocked" : "";
+    tr.className = [row.effectiveBlockedReason ? "is-blocked" : "", row.isFixture ? "is-fixture-row" : ""]
+      .filter(Boolean)
+      .join(" ");
 
     const selectCell = document.createElement("td");
     if (row.eligible && !row.held) {
@@ -211,7 +213,7 @@ export function mountAvailableView(container, account) {
     }
     tr.appendChild(importantCell);
 
-    tr.appendChild(textCell(row.subject));
+    tr.appendChild(subjectCell(row));
     tr.appendChild(textCell(`${formatBytes(row.bodyBytes)} · ~${formatDuration(row.bodySeconds)}`));
 
     const attachmentCell = document.createElement("td");
@@ -279,6 +281,23 @@ export function mountAvailableView(container, account) {
   function textCell(text) {
     const td = document.createElement("td");
     td.textContent = text;
+    return td;
+  }
+
+  // Per-row "Demo" marker, matching sent-status-view.js's pattern. The
+  // page-level banner alone is not enough once real Station manifest rows
+  // can appear alongside fixture rows in this same view (see
+  // desktop/docs/MAIL_MODEL_CORRECTION.md's Stage 4 migration) — fixture
+  // data must stay unmistakably identified per row, not just per page.
+  function subjectCell(row) {
+    const td = document.createElement("td");
+    td.textContent = row.isFixture ? `${row.subject} ` : row.subject;
+    if (row.isFixture) {
+      const fx = document.createElement("span");
+      fx.className = "badge badge-fixture";
+      fx.textContent = "Demo";
+      td.appendChild(fx);
+    }
     return td;
   }
 

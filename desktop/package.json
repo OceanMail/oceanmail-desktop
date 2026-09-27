@@ -1,7 +1,7 @@
 {
   "name": "oceanmail-desktop",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.3.6",
   "description": "OceanMail Desktop bootstrap: mandatory Thunderbird MailExtension and dev tooling.",
   "type": "module",
   "scripts": {

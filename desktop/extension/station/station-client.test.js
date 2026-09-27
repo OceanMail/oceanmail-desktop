@@ -84,6 +84,42 @@ test("Implemented.health throws with the HTTP status on a non-ok response", asyn
   );
 });
 
+test("Implemented.health bounds its request with an AbortSignal so a hung Station cannot hang the caller forever", async () => {
+  let requestedSignal;
+  globalThis.fetch = async (url, options) => {
+    requestedSignal = options.signal;
+    return { ok: true, status: 200, json: async () => ({}) };
+  };
+
+  await Implemented.health("http://127.0.0.1:8080");
+
+  assert.ok(requestedSignal instanceof AbortSignal, "getJson must pass an AbortSignal to fetch");
+});
+
+test("Implemented.health surfaces a clear timeout message instead of a raw AbortError", async () => {
+  globalThis.fetch = async () => {
+    const timeoutError = new Error("The operation was aborted due to timeout");
+    timeoutError.name = "TimeoutError";
+    throw timeoutError;
+  };
+
+  await assert.rejects(
+    () => Implemented.health("http://127.0.0.1:8080"),
+    /did not respond within \d+ms/
+  );
+});
+
+test("Implemented.health rethrows a non-timeout fetch error unchanged", async () => {
+  globalThis.fetch = async () => {
+    throw new Error("network unreachable");
+  };
+
+  await assert.rejects(
+    () => Implemented.health("http://127.0.0.1:8080"),
+    /network unreachable/
+  );
+});
+
 test("NotYetAvailable functions all reject without calling fetch", async () => {
   let fetchCalled = false;
   globalThis.fetch = async () => {

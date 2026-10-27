@@ -96,9 +96,9 @@ Use the mail lab and pinned Thunderbird integration scripts when the task touche
 
 For UI-affecting Desktop work, use this default review loop unless the task explicitly requires otherwise:
 
-1. Codex performs first-pass visual QA by launching the pinned Thunderbird/OceanMail Desktop build and capturing the affected surfaces where practical.
-2. Codex fixes obvious visual or interaction regressions before handoff.
-3. ChatGPT independently reviews the implementation diff/CI and selected final screenshots or captures.
+1. Claude, as primary programmer, performs first-pass visual QA by launching the pinned Thunderbird/OceanMail Desktop build and capturing the affected surfaces where practical.
+2. Claude fixes obvious visual or interaction regressions, then reviews its own actual diff/CI and final captures before handoff.
+3. For consequential changes, an independent reviewer other than the authoring session (ChatGPT at the owner's request, or a separate fresh-context Claude review session) reviews the implementation diff/CI and selected final screenshots or captures.
 4. The owner is reserved for final product judgment, consequential UX decisions, and live behavior that cannot be established reliably from automated checks/screenshots.
 
 Do not require the owner to manually review every minor visual change when the above evidence is sufficient. Conversely, screenshots do not replace live verification for interaction, timing, focus, platform, or other behavior that requires a running application.
